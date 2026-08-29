@@ -6,24 +6,25 @@ import {
   type StyleProps,
 } from "../fields/styleFields";
 import {
-  typographyFields,
-  defaultTypographyProps,
-  type TypographyProps,
-} from "../fields/typographyFields";
+  overrideStyleFields,
+  defaultOverrideProps,
+  resolveTypographyCss,
+  type StyleOverrideProps,
+} from "../fields/typographyTokens";
 
 export type ParagraphBlockProps = StyleProps &
-  TypographyProps & {
+  StyleOverrideProps & {
     text: RichText;
     align: "left" | "center" | "right";
-    color: string;
   };
 
 export const ParagraphBlock: ComponentConfig<ParagraphBlockProps> = {
   fields: {
     // Puck's richtext field is a full Tiptap editor (bold/italic/underline/
-    // strike/links/lists/blockquote). It's stored as an HTML string, but
-    // Puck resolves it to an already-parsed ReactNode before render() sees
-    // it — render it directly as children, not via dangerouslySetInnerHTML
+    // strike/links/lists/blockquote, Enter for a new paragraph, Shift+Enter
+    // for a soft line break). It's stored as an HTML string, but Puck
+    // resolves it to an already-parsed ReactNode before render() sees it —
+    // render it directly as children, not via dangerouslySetInnerHTML
     // (which double-wraps the ReactNode into "[object Object]").
     text: { type: "richtext" },
     align: {
@@ -34,27 +35,38 @@ export const ParagraphBlock: ComponentConfig<ParagraphBlockProps> = {
         { label: "Right", value: "right" },
       ],
     },
-    color: { type: "text" },
-    ...typographyFields,
+    ...overrideStyleFields,
     ...styleFields,
   },
   defaultProps: {
     text: "<p>Text</p>",
     align: "left",
-    color: "",
-    ...defaultTypographyProps(1.6),
+    ...defaultOverrideProps(16, 1.6),
     ...defaultStyleProps,
   },
-  render: ({ text, align, color, lineHeight, letterSpacing, ...style }) => (
+  render: ({
+    text,
+    align,
+    overrideStyle = false,
+    color = "",
+    size = 16,
+    lineHeight = 1.6,
+    letterSpacing = 0,
+    ...style
+  }) => (
     <div style={styleWrapperCss(style)}>
       <div
         style={{
-          fontFamily: "var(--font-body, inherit)",
-          fontSize: "1rem",
-          lineHeight,
-          letterSpacing: `${letterSpacing}px`,
+          ...resolveTypographyCss("body", {
+            overrideStyle,
+            color,
+            size,
+            lineHeight,
+            letterSpacing,
+          }),
           textAlign: align,
-          color: color || undefined,
+          wordBreak: "keep-all",
+          overflowWrap: "break-word",
         }}
       >
         {text}

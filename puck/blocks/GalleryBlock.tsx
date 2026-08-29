@@ -14,12 +14,32 @@ type GalleryImage = {
 
 export type GalleryBlockProps = StyleProps & {
   columns: number;
+  gap: number;
+  objectPosition: string;
   images: GalleryImage[];
 };
+
+const objectPositionOptions = [
+  { label: "왼쪽 위", value: "left top" },
+  { label: "위", value: "center top" },
+  { label: "오른쪽 위", value: "right top" },
+  { label: "왼쪽", value: "left center" },
+  { label: "중앙", value: "center center" },
+  { label: "오른쪽", value: "right center" },
+  { label: "왼쪽 아래", value: "left bottom" },
+  { label: "아래", value: "center bottom" },
+  { label: "오른쪽 아래", value: "right bottom" },
+];
 
 export const GalleryBlock: ComponentConfig<GalleryBlockProps> = {
   fields: {
     columns: { type: "number", min: 1, max: 5 },
+    gap: { type: "number", label: "이미지 간격 (px)", min: 0, max: 80 },
+    objectPosition: {
+      type: "select",
+      label: "클리핑 기준 위치",
+      options: objectPositionOptions,
+    },
     images: {
       type: "array",
       max: 20,
@@ -34,16 +54,18 @@ export const GalleryBlock: ComponentConfig<GalleryBlockProps> = {
   },
   defaultProps: {
     columns: 3,
+    gap: 16,
+    objectPosition: "center center",
     images: [],
     ...defaultStyleProps,
   },
-  render: ({ columns, images, ...style }) => (
+  render: ({ columns, gap = 16, objectPosition = "center center", images, ...style }) => (
     <div
       style={{
         ...styleWrapperCss(style),
         display: "grid",
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        gap: "1rem",
+        gap: `${gap}px`,
       }}
     >
       {images.map((img, i) =>
@@ -53,7 +75,7 @@ export const GalleryBlock: ComponentConfig<GalleryBlockProps> = {
             key={i}
             src={img.src}
             alt={img.alt}
-            style={{ width: "100%", aspectRatio: "1 / 1", objectFit: "cover" }}
+            style={{ width: "100%", aspectRatio: "1 / 1", objectFit: "cover", objectPosition }}
           />
         ) : (
           <div

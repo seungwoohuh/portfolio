@@ -57,7 +57,7 @@ export const ButtonBlock: ComponentConfig<ButtonBlockProps> = {
         href={url || "#"}
         style={{
           display: "inline-block",
-          fontFamily: "var(--font-body, inherit)",
+          fontFamily: "var(--body-font, inherit)",
           padding: "10px 22px",
           borderRadius: 6,
           fontSize: "0.95rem",

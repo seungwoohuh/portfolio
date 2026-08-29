@@ -4,6 +4,7 @@ export type SectionBlockProps = {
   background: string;
   maxWidth: number;
   paddingY: number;
+  gap: number;
   content: Slot;
 };
 
@@ -16,15 +17,17 @@ export const SectionBlock: ComponentConfig<SectionBlockProps> = {
     background: { type: "text" },
     maxWidth: { type: "number", min: 320, max: 1600 },
     paddingY: { type: "number", min: 0, max: 200 },
+    gap: { type: "number", label: "요소 간 자동 간격 (px)", min: 0, max: 160 },
     content: { type: "slot" },
   },
   defaultProps: {
     background: "",
     maxWidth: 960,
     paddingY: 48,
+    gap: 0,
     content: [],
   },
-  render: ({ background, maxWidth, paddingY, content: Content }) => (
+  render: ({ background, maxWidth, paddingY, gap = 0, content: Content }) => (
     <div style={{ background: background || undefined }}>
       <div
         style={{
@@ -33,7 +36,7 @@ export const SectionBlock: ComponentConfig<SectionBlockProps> = {
           padding: `${paddingY}px 24px`,
         }}
       >
-        <Content />
+        <Content style={{ display: "flex", flexDirection: "column", gap: `${gap}px` }} />
       </div>
     </div>
   ),
