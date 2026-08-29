@@ -14,7 +14,11 @@ export type ParagraphBlockProps = StyleProps & {
 
 export const ParagraphBlock: ComponentConfig<ParagraphBlockProps> = {
   fields: {
-    text: { type: "textarea" },
+    // Puck's richtext field is a full Tiptap editor (bold/italic/underline/
+    // strike/links/lists/blockquote) — it stores the content as an HTML
+    // string, which is rendered with dangerouslySetInnerHTML below. Safe
+    // here: only the site owner (dev/preview-only admin) can write it.
+    text: { type: "richtext" },
     align: {
       type: "select",
       options: [
@@ -27,25 +31,22 @@ export const ParagraphBlock: ComponentConfig<ParagraphBlockProps> = {
     ...styleFields,
   },
   defaultProps: {
-    text: "Text",
+    text: "<p>Text</p>",
     align: "left",
     color: "",
     ...defaultStyleProps,
   },
   render: ({ text, align, color, ...style }) => (
     <div style={styleWrapperCss(style)}>
-      <p
+      <div
         style={{
           fontSize: "1rem",
           lineHeight: 1.6,
           textAlign: align,
           color: color || undefined,
-          margin: 0,
-          whiteSpace: "pre-wrap",
         }}
-      >
-        {text}
-      </p>
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
     </div>
   ),
 };
