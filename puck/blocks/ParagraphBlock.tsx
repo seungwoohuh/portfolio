@@ -1,4 +1,4 @@
-import type { ComponentConfig } from "@puckeditor/core";
+import type { ComponentConfig, RichText } from "@puckeditor/core";
 import {
   styleFields,
   styleWrapperCss,
@@ -7,7 +7,7 @@ import {
 } from "../fields/styleFields";
 
 export type ParagraphBlockProps = StyleProps & {
-  text: string;
+  text: RichText;
   align: "left" | "center" | "right";
   color: string;
 };
@@ -15,9 +15,10 @@ export type ParagraphBlockProps = StyleProps & {
 export const ParagraphBlock: ComponentConfig<ParagraphBlockProps> = {
   fields: {
     // Puck's richtext field is a full Tiptap editor (bold/italic/underline/
-    // strike/links/lists/blockquote) — it stores the content as an HTML
-    // string, which is rendered with dangerouslySetInnerHTML below. Safe
-    // here: only the site owner (dev/preview-only admin) can write it.
+    // strike/links/lists/blockquote). It's stored as an HTML string, but
+    // Puck resolves it to an already-parsed ReactNode before render() sees
+    // it — render it directly as children, not via dangerouslySetInnerHTML
+    // (which double-wraps the ReactNode into "[object Object]").
     text: { type: "richtext" },
     align: {
       type: "select",
@@ -45,8 +46,9 @@ export const ParagraphBlock: ComponentConfig<ParagraphBlockProps> = {
           textAlign: align,
           color: color || undefined,
         }}
-        dangerouslySetInnerHTML={{ __html: text }}
-      />
+      >
+        {text}
+      </div>
     </div>
   ),
 };
