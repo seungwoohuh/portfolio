@@ -5,13 +5,19 @@ import {
   defaultStyleProps,
   type StyleProps,
 } from "../fields/styleFields";
+import {
+  typographyFields,
+  defaultTypographyProps,
+  type TypographyProps,
+} from "../fields/typographyFields";
 
-export type HeadingBlockProps = StyleProps & {
-  text: string;
-  level: "h1" | "h2" | "h3" | "h4";
-  align: "left" | "center" | "right";
-  color: string;
-};
+export type HeadingBlockProps = StyleProps &
+  TypographyProps & {
+    text: string;
+    level: "h1" | "h2" | "h3" | "h4";
+    align: "left" | "center" | "right";
+    color: string;
+  };
 
 const sizeByLevel: Record<HeadingBlockProps["level"], string> = {
   h1: "2.5rem",
@@ -41,6 +47,7 @@ export const HeadingBlock: ComponentConfig<HeadingBlockProps> = {
       ],
     },
     color: { type: "text" },
+    ...typographyFields,
     ...styleFields,
   },
   defaultProps: {
@@ -48,16 +55,20 @@ export const HeadingBlock: ComponentConfig<HeadingBlockProps> = {
     level: "h2",
     align: "left",
     color: "",
+    ...defaultTypographyProps(1.2),
     ...defaultStyleProps,
   },
-  render: ({ text, level: Level, align, color, ...style }) => (
+  render: ({ text, level: Level, align, color, lineHeight, letterSpacing, ...style }) => (
     <div style={styleWrapperCss(style)}>
       <Level
         style={{
+          fontFamily: "var(--font-heading, inherit)",
           fontSize: sizeByLevel[Level],
           fontWeight: 700,
           textAlign: align,
           color: color || undefined,
+          lineHeight,
+          letterSpacing: `${letterSpacing}px`,
           margin: 0,
         }}
       >

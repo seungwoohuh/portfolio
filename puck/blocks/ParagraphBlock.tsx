@@ -5,12 +5,18 @@ import {
   defaultStyleProps,
   type StyleProps,
 } from "../fields/styleFields";
+import {
+  typographyFields,
+  defaultTypographyProps,
+  type TypographyProps,
+} from "../fields/typographyFields";
 
-export type ParagraphBlockProps = StyleProps & {
-  text: RichText;
-  align: "left" | "center" | "right";
-  color: string;
-};
+export type ParagraphBlockProps = StyleProps &
+  TypographyProps & {
+    text: RichText;
+    align: "left" | "center" | "right";
+    color: string;
+  };
 
 export const ParagraphBlock: ComponentConfig<ParagraphBlockProps> = {
   fields: {
@@ -29,20 +35,24 @@ export const ParagraphBlock: ComponentConfig<ParagraphBlockProps> = {
       ],
     },
     color: { type: "text" },
+    ...typographyFields,
     ...styleFields,
   },
   defaultProps: {
     text: "<p>Text</p>",
     align: "left",
     color: "",
+    ...defaultTypographyProps(1.6),
     ...defaultStyleProps,
   },
-  render: ({ text, align, color, ...style }) => (
+  render: ({ text, align, color, lineHeight, letterSpacing, ...style }) => (
     <div style={styleWrapperCss(style)}>
       <div
         style={{
+          fontFamily: "var(--font-body, inherit)",
           fontSize: "1rem",
-          lineHeight: 1.6,
+          lineHeight,
+          letterSpacing: `${letterSpacing}px`,
           textAlign: align,
           color: color || undefined,
         }}

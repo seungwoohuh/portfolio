@@ -11,6 +11,7 @@ export type ButtonBlockProps = StyleProps & {
   url: string;
   variant: "primary" | "secondary";
   align: "left" | "center" | "right";
+  letterSpacing: number;
 };
 
 export const ButtonBlock: ComponentConfig<ButtonBlockProps> = {
@@ -32,6 +33,7 @@ export const ButtonBlock: ComponentConfig<ButtonBlockProps> = {
         { label: "Right", value: "right" },
       ],
     },
+    letterSpacing: { type: "number", min: -5, max: 20, step: 0.5 },
     ...styleFields,
   },
   defaultProps: {
@@ -39,9 +41,10 @@ export const ButtonBlock: ComponentConfig<ButtonBlockProps> = {
     url: "",
     variant: "primary",
     align: "left",
+    letterSpacing: 0,
     ...defaultStyleProps,
   },
-  render: ({ text, url, variant, align, ...style }) => (
+  render: ({ text, url, variant, align, letterSpacing, ...style }) => (
     <div
       style={{
         ...styleWrapperCss(style),
@@ -54,10 +57,12 @@ export const ButtonBlock: ComponentConfig<ButtonBlockProps> = {
         href={url || "#"}
         style={{
           display: "inline-block",
+          fontFamily: "var(--font-body, inherit)",
           padding: "10px 22px",
           borderRadius: 6,
           fontSize: "0.95rem",
           fontWeight: 600,
+          letterSpacing: `${letterSpacing}px`,
           textDecoration: "none",
           background: variant === "primary" ? "#111" : "transparent",
           color: variant === "primary" ? "#fff" : "#111",
