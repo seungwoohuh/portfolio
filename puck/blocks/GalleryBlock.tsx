@@ -20,11 +20,11 @@ export type GalleryBlockProps = StyleProps & {
 };
 
 const objectPositionOptions = [
+  { label: "중앙", value: "center center" },
   { label: "왼쪽 위", value: "left top" },
   { label: "위", value: "center top" },
   { label: "오른쪽 위", value: "right top" },
   { label: "왼쪽", value: "left center" },
-  { label: "중앙", value: "center center" },
   { label: "오른쪽", value: "right center" },
   { label: "왼쪽 아래", value: "left bottom" },
   { label: "아래", value: "center bottom" },
