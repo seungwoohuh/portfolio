@@ -1,4 +1,5 @@
 import type { ComponentConfig, Slot } from "@puckeditor/core";
+import { numberField } from "../fields/NumberField";
 import {
   styleFields,
   styleWrapperCss,
@@ -26,7 +27,7 @@ export const ColumnsBlock: ComponentConfig<ColumnsBlockProps> = {
         { label: "3 columns", value: 3 },
       ],
     },
-    gap: { type: "number", min: 0, max: 120 },
+    gap: numberField({ min: 0, max: 120 }),
     col1: { type: "slot" },
     col2: { type: "slot" },
     col3: { type: "slot" },

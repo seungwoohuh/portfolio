@@ -1,5 +1,6 @@
 import type { ComponentConfig } from "@puckeditor/core";
 import { ImageUploadField } from "../fields/ImageUploadField";
+import { numberField } from "../fields/NumberField";
 import {
   styleFields,
   styleWrapperCss,
@@ -38,13 +39,8 @@ export const ImageBlock: ComponentConfig<ImageBlockProps> = {
       render: ImageUploadField,
     },
     alt: { type: "text" },
-    width: { type: "number", label: "너비 (%)", min: 5, max: 100 },
-    height: {
-      type: "number",
-      label: "높이 px (0 = 원본 비율)",
-      min: 0,
-      max: 2000,
-    },
+    width: numberField({ label: "너비 (%)", min: 5, max: 100 }),
+    height: numberField({ label: "높이 px (0 = 원본 비율)", min: 0, max: 2000 }),
     objectFit: {
       type: "select",
       label: "높이 지정 시 채우기 방식",
@@ -64,7 +60,10 @@ export const ImageBlock: ComponentConfig<ImageBlockProps> = {
     src: undefined,
     alt: "",
     width: 100,
-    height: 0,
+    // A fixed default (rather than 0/"auto") keeps a newly inserted image's
+    // frame stable instead of jumping to whatever aspect ratio the uploaded
+    // photo happens to have — the user resizes deliberately from here.
+    height: 360,
     objectFit: "cover",
     objectPosition: "center center",
     ...defaultStyleProps,

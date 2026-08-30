@@ -1,5 +1,6 @@
 import type { ComponentConfig } from "@puckeditor/core";
 import { ImageUploadField } from "../fields/ImageUploadField";
+import { numberField } from "../fields/NumberField";
 import {
   styleFields,
   styleWrapperCss,
@@ -33,8 +34,8 @@ const objectPositionOptions = [
 
 export const GalleryBlock: ComponentConfig<GalleryBlockProps> = {
   fields: {
-    columns: { type: "number", min: 1, max: 5 },
-    gap: { type: "number", label: "이미지 간격 (px)", min: 0, max: 80 },
+    columns: numberField({ label: "칼럼 수", min: 1, max: 6 }),
+    gap: numberField({ label: "이미지 간격 (px)", min: 0, max: 80 }),
     objectPosition: {
       type: "select",
       label: "클리핑 기준 위치",

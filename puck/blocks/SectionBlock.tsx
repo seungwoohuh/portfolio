@@ -1,4 +1,5 @@
 import type { ComponentConfig, Slot } from "@puckeditor/core";
+import { numberField } from "../fields/NumberField";
 
 export type SectionBlockProps = {
   background: string;
@@ -15,9 +16,9 @@ export type SectionBlockProps = {
 export const SectionBlock: ComponentConfig<SectionBlockProps> = {
   fields: {
     background: { type: "text" },
-    maxWidth: { type: "number", min: 320, max: 1600 },
-    paddingY: { type: "number", min: 0, max: 200 },
-    gap: { type: "number", label: "요소 간 자동 간격 (px)", min: 0, max: 160 },
+    maxWidth: numberField({ min: 320, max: 1600 }),
+    paddingY: numberField({ min: 0, max: 200 }),
+    gap: numberField({ label: "요소 간 자동 간격 (px)", min: 0, max: 160 }),
     content: { type: "slot" },
   },
   defaultProps: {

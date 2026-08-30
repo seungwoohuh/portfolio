@@ -1,4 +1,5 @@
 import type { ComponentConfig } from "@puckeditor/core";
+import { numberField } from "../fields/NumberField";
 
 export type DividerBlockProps = {
   color: string;
@@ -9,8 +10,8 @@ export type DividerBlockProps = {
 export const DividerBlock: ComponentConfig<DividerBlockProps> = {
   fields: {
     color: { type: "text" },
-    thickness: { type: "number", min: 1, max: 20 },
-    margin: { type: "number", min: 0, max: 200 },
+    thickness: numberField({ min: 1, max: 20 }),
+    margin: numberField({ min: 0, max: 200 }),
   },
   defaultProps: {
     color: "#dddddd",

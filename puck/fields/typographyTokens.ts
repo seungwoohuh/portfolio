@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import type { ObjectField } from "@puckeditor/core";
+import { numberField } from "./NumberField";
 
 // Page-wide typography "design tokens" — one font/color/size/line-height/
 // letter-spacing set per text role (h1/h2/h3/body), configured once at the
@@ -30,15 +31,14 @@ export function typographyTokenField(label: string): ObjectField<TypographyToken
     objectFields: {
       font: { type: "text", label: "폰트 (Google Fonts 이름)" },
       color: { type: "text", label: "색상" },
-      size: { type: "number", label: "크기 (px)", min: 8, max: 160 },
-      lineHeight: { type: "number", label: "행간", min: 0.8, max: 3, step: 0.1 },
-      letterSpacing: {
-        type: "number",
+      size: numberField({ label: "크기 (px)", min: 8, max: 160 }),
+      lineHeight: numberField({ label: "행간", min: 0.8, max: 3, step: 0.1 }),
+      letterSpacing: numberField({
         label: "자간 (px)",
         min: -10,
         max: 40,
-        step: 0.5,
-      },
+        step: 0.1,
+      }),
     },
   };
 }
@@ -77,21 +77,19 @@ export const overrideStyleFields = {
     ],
   },
   color: { type: "text", label: "색상 (개별 지정 시)" },
-  size: { type: "number", label: "크기 px (개별 지정 시)", min: 8, max: 160 },
-  lineHeight: {
-    type: "number",
+  size: numberField({ label: "크기 px (개별 지정 시)", min: 8, max: 160 }),
+  lineHeight: numberField({
     label: "행간 (개별 지정 시)",
     min: 0.8,
     max: 3,
     step: 0.1,
-  },
-  letterSpacing: {
-    type: "number",
+  }),
+  letterSpacing: numberField({
     label: "자간 px (개별 지정 시)",
     min: -10,
     max: 40,
-    step: 0.5,
-  },
+    step: 0.1,
+  }),
 } as const;
 
 export function defaultOverrideProps(size: number, lineHeight: number): StyleOverrideProps {

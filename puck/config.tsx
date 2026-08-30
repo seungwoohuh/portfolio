@@ -1,5 +1,6 @@
 import type { Config } from "@puckeditor/core";
-import type { CSSProperties } from "react";
+import { cloneElement, isValidElement, type CSSProperties, type ReactElement } from "react";
+import { numberField } from "./fields/NumberField";
 import { HeadingBlock, type HeadingBlockProps } from "./blocks/HeadingBlock";
 import {
   ParagraphBlock,
@@ -57,15 +58,10 @@ export const config: Config<PortfolioComponents, PortfolioRootProps, CategoryNam
   root: {
     fields: {
       background: { type: "text" },
-      maxWidth: { type: "number", min: 320, max: 1600 },
-      paddingX: { type: "number", label: "좌우 여백 (px)", min: 0, max: 200 },
-      paddingY: { type: "number", label: "상하 여백 (px)", min: 0, max: 200 },
-      contentGap: {
-        type: "number",
-        label: "요소 간 자동 간격 (px)",
-        min: 0,
-        max: 160,
-      },
+      maxWidth: numberField({ min: 320, max: 1600 }),
+      paddingX: numberField({ label: "좌우 여백 (px)", min: 0, max: 200 }),
+      paddingY: numberField({ label: "상하 여백 (px)", min: 0, max: 200 }),
+      contentGap: numberField({ label: "요소 간 자동 간격 (px)", min: 0, max: 160 }),
       h1: typographyTokenField("H1"),
       h2: typographyTokenField("H2"),
       h3: typographyTokenField("H3"),
@@ -92,6 +88,25 @@ export const config: Config<PortfolioComponents, PortfolioRootProps, CategoryNam
       children,
     }) => {
       const fontsHref = googleFontsHref([h1.font, h2.font, h3.font, body.font]);
+      // Puck's root `children` resolves differently in the live editor
+      // (wrapped in one real DropZone container div) vs. the published page
+      // (a bare Fragment, no wrapper) — a plain flex+gap div around
+      // `children` only ever sees ONE child in the editor, so the gap never
+      // shows there. Cloning a `style` onto `children` reaches the actual
+      // DropZone container in the editor (it merges the style itself); on
+      // the published page the extra prop is simply ignored, so the outer
+      // wrapper's own flex+gap (which works there, since Fragment flattens)
+      // still applies.
+      const gapStyle: CSSProperties = {
+        display: "flex",
+        flexDirection: "column",
+        gap: `${contentGap}px`,
+      };
+      const gappedChildren = isValidElement(children)
+        ? cloneElement(children as ReactElement<{ style?: CSSProperties }>, {
+            style: gapStyle,
+          })
+        : children;
       return (
         <div
           style={
@@ -110,12 +125,10 @@ export const config: Config<PortfolioComponents, PortfolioRootProps, CategoryNam
               maxWidth: `${maxWidth}px`,
               margin: "0 auto",
               padding: `${paddingY}px ${paddingX}px`,
-              display: "flex",
-              flexDirection: "column",
-              gap: `${contentGap}px`,
+              ...gapStyle,
             }}
           >
-            {children}
+            {gappedChildren}
           </div>
         </div>
       );

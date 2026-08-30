@@ -1,4 +1,5 @@
 import type { ComponentConfig } from "@puckeditor/core";
+import { numberField } from "../fields/NumberField";
 import {
   styleFields,
   styleWrapperCss,
@@ -33,7 +34,7 @@ export const ButtonBlock: ComponentConfig<ButtonBlockProps> = {
         { label: "Right", value: "right" },
       ],
     },
-    letterSpacing: { type: "number", min: -5, max: 20, step: 0.5 },
+    letterSpacing: numberField({ min: -5, max: 20, step: 0.1 }),
     ...styleFields,
   },
   defaultProps: {
